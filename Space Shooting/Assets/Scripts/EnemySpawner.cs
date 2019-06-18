@@ -7,38 +7,64 @@ public class EnemySpawner : MonoBehaviour
 {
 
 
-
-    [SerializeField] private GameController.GameMode gamemode;
+    public enum AttackMode
+    {
+        Random,
+        Wave
+    }
+    [SerializeField] private AttackMode attackMode;
+    [SerializeField] private GameController.GameDifficulty difficulty;
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private float spawnDelay;
-    private float spawnTime;
-    private float diferenceY;
-    private int numberOnRow,realNumber;
-
     [SerializeField] private float waveSpawnDelay;
+    [SerializeField] private float attackModeDelay;
+
+    private float spawnTime;
     private float waveSpawnTime;
-    private GameObject Canvas,Player;
+    private float attackModeTime;
+
+    private float diferenceY;
+    private int multiplier = 1;
+
+    private int numberRow;
     private int spawned = 0;
+
+
+    private GameObject Player;
     private Vector3 spawnPosition;
     private WaveSpawner waveSpawner;
+    private GameController.GameMode gamemode;
+    
     // Start is called before the first frame update
     void Start()
     {
-
         Player = GameObject.Find("Player");
         diferenceY = enemyPrefab.transform.position.y - Player.transform.position.y;
         spawnPosition = enemyPrefab.transform.localPosition;
-        gamemode = new GameController.GameMode
-        {
-            mode = GameController.GameMode.Easy
-        };
+        gamemode = new GameController.GameMode();
         waveSpawner = GetComponent<WaveSpawner>();
-        ChangeNumber();
+        GameMode();
+
+    }
+    void GameMode()
+    {
+        if (difficulty == GameController.GameDifficulty.Easy)
+            gamemode.mode = GameController.GameMode.Easy;
+        if (difficulty == GameController.GameDifficulty.Medium)
+            gamemode.mode = GameController.GameMode.Medium;
+        if (difficulty == GameController.GameDifficulty.Hard)
+            gamemode.mode = GameController.GameMode.Hard;
+        if (difficulty == GameController.GameDifficulty.Insame)
+        {
+            attackModeTime = 0f;
+            gamemode.mode = GameController.GameMode.Insane;
+        }
+        ChangeRowNumber();
     }
 
-    void ChangeNumber()
+    void ChangeRowNumber()
     {
-        realNumber = Random.Range(gamemode.mode.minNumberRow, gamemode.mode.maxNumberRow);
+        numberRow = Random.Range(gamemode.mode.minNumberRow, gamemode.mode.maxNumberRow);
         Debug.Log(gamemode.mode.minNumberRow);
     }
     // Update is called once per frame
@@ -47,12 +73,13 @@ public class EnemySpawner : MonoBehaviour
         
         spawnPosition.x = enemyPrefab.transform.localPosition.x;
         spawnPosition.x += Random.Range(-10, 10);
-        if(spawned + 1 > realNumber)
+        spawnPosition.y = Player.transform.position.y + diferenceY * multiplier;
+        if(spawned + 1 > numberRow)
         {
-            Debug.Log("Reached real Number" + realNumber);
+            Debug.Log("Reached real Number" + numberRow);
             spawned = 0;
-            ChangeNumber();
-            spawnPosition.y += diferenceY;
+            ChangeRowNumber();
+            multiplier++;
         }
         GameObject enemy = Instantiate(enemyPrefab);
         enemy.GetComponent<SpriteRenderer>().enabled = false;
@@ -72,7 +99,7 @@ public class EnemySpawner : MonoBehaviour
     }
     void PlaceRandom()
     {
-        if (spawnTime > spawnDelay)
+        if (spawnTime > spawnDelay && spawned == 0)
         {
             StartCoroutine(EnemyPlace());
             spawnTime = 0;
@@ -81,15 +108,38 @@ public class EnemySpawner : MonoBehaviour
     }
     void PlaceWave()
     {
-        if (waveSpawnTime > waveSpawnDelay)
+        if (waveSpawnTime > waveSpawnDelay || waveSpawnTime == 0)
         {
             waveSpawner.RandomState();
             waveSpawnTime = 0;
         }
         waveSpawnTime += Time.deltaTime;
     }
+    void ChangeAttackMode()
+    {
+        if (attackMode == AttackMode.Random)
+            attackMode = AttackMode.Wave;
+        else
+            attackMode = AttackMode.Random;
+    }
+    void GenerateEnemys()
+    {
+        if(gamemode.mode == GameController.GameMode.Insane)
+        {
+            if(attackModeTime >= attackModeDelay)
+            {
+                ChangeAttackMode();
+                attackModeTime = 0;
+            }
+            attackModeTime += Time.deltaTime;
+        }
+        if (attackMode == AttackMode.Random)
+            PlaceRandom();
+        else if (attackMode == AttackMode.Wave)
+            PlaceWave();
+    }
     void Update()
     {
-        PlaceRandom();
+        GenerateEnemys();
     }
 }

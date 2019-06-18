@@ -16,7 +16,7 @@ public class GameController : MonoBehaviour
     {
 
         public float spawnDelay;
-        public int minNumberRow,maxNumberRow; 
+        public int minNumberRow,maxNumberRow;
         public GameModeInfo(float _spawnDelay, int min,int max)
         {
             minNumberRow = min;

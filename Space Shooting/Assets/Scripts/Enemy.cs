@@ -10,6 +10,7 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     public bool touched = false;
     public float health = 100f;
+    public bool destroyed = false;
     private SpriteRenderer sprite;
     private Scor scor;
     private Animator animator;
@@ -38,6 +39,9 @@ public class Enemy : MonoBehaviour
             StartCoroutine(ChangeColor());
             if (health <= 0)
             {
+                destroyed = true;
+                Destroy(GetComponent<Rigidbody2D>());
+                Destroy(GetComponent<BoxCollider2D>());
                 StartCoroutine(Remove());
                 scor.Add();
             }

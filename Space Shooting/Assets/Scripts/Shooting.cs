@@ -26,9 +26,9 @@ public class Shooting : MonoBehaviour
     void Update()
     {
         if (isAuto)
-            shootingDelay = 1f;
+            shootingDelay = 1.5f;
         else
-            shootingTime = 1.5f;
+            shootingDelay = 0.1f;
         if (Input.GetKeyDown(KeyCode.E))
             isAuto = !isAuto;
         if(isAuto && shootingTime >= shootingDelay)
@@ -36,7 +36,7 @@ public class Shooting : MonoBehaviour
             shootingTime = 0;
             OneShoot();
         }
-        if (Input.GetButton("Fire1") && shootingTime >= shootingDelay && !isAuto)
+        if (Input.GetKeyDown(KeyCode.Space) && shootingTime >= shootingDelay && !isAuto)
         {
             OneShoot();
             shootingTime = 0f;

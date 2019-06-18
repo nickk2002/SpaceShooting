@@ -1088,10 +1088,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7621af1760f7c94ba7b739a14a4eab3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackMode: 0
+  difficulty: 3
   enemyPrefab: {fileID: 237457035371955435, guid: 0539f55719806704d80ae4bbe25c40dc,
     type: 3}
-  spawnDelay: 0
-  waveSpawnDelay: 10
+  spawnDelay: 3
+  waveSpawnDelay: 15
+  attackModeDelay: 10
 --- !u!4 &1220709736
 Transform:
   m_ObjectHideFlags: 0
@@ -1497,7 +1500,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cad68ab0ed3ae0546aa91f1e0c20e103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.08
+  speed: 0.05
 --- !u!212 &1659633241
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2145,7 +2148,7 @@ MonoBehaviour:
   fireBallPrefab: {fileID: 7802342118364040263, guid: 014436a15bf2ebe459d3f5a006da7fab,
     type: 3}
   fireBallPosisiton: {fileID: 1657446478}
-  shootingDelay: 2
+  shootingDelay: 0.5
   isAuto: 0
 --- !u!95 &8471776633680139716
 Animator:

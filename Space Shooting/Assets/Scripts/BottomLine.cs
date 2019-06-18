@@ -20,9 +20,9 @@ public class BottomLine : MonoBehaviour
     {
         GameObject obj = collision.gameObject;
         SpriteRenderer sprite = obj.GetComponent<SpriteRenderer>();
-        if(obj.GetComponent<Enemy>() != null)
-            Debug.Log(sprite.enabled);
-        if (obj.GetComponent<Enemy>() != null &&  sprite.enabled)
+        Enemy enemy = obj.GetComponent<Enemy>();
+
+        if (enemy != null &&  sprite.enabled)
         {
             Debug.Log("Enemy tocuhed end line" + collision.gameObject);
             PlayerHealth health = Health.GetComponent<PlayerHealth>();
